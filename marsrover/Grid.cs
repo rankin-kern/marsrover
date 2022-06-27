@@ -1,7 +1,7 @@
 ﻿// A class that defines an x,y coordinate based grid
 // divided into squares.
+using System.Text;
 
-using System;
 namespace marsrover
 {
     public enum CompassDirection
@@ -20,22 +20,21 @@ namespace marsrover
 
     public class Grid
     {
-        public int width { get; }
-        public int height { get; }
+        private Coordinates neCorner;
         public Rover? activeRover { get; set; }
+        public List<Rover> rovers;
 
         // int cornerX: the X-coordinate of the top right square
         // int cornerY: the Y-coordinate of the top right square
         public Grid(int cornerX, int cornerY)
         {
-            width = cornerX;
-            height = cornerY;
-            //grid = new Square[width, height];
+            neCorner = new Coordinates(cornerX, cornerY);
+            rovers = new List<Rover>();
         }
 
         // Given a string like '1 2 N', update the corresponding Square in the Grid
         // to have a rover on it
-        public void setStartingLocation(string start)
+        public void handleStartingLocationCommand(string start)
         {
             // TODO make parsing more robust
             try
@@ -43,10 +42,11 @@ namespace marsrover
                 string[] parts = start.Split(' ');
                 int x = Int32.Parse(parts[0]);
                 int y = Int32.Parse(parts[1]);
-                if (x >= 0 && x <= this.width && y >= 0 && y <= height)
+                if (x >= 0 && x <= neCorner.X && y >= 0 && y <= neCorner.Y)
                 {
-                    CompassDirection direction = ConvertLetterToCompassDirection(parts[2]);
-                    activeRover = new Rover(direction);
+                    CompassDirection direction = Converters.LetterToCompassDirection(parts[2]);
+                    this.activeRover = new Rover(direction, new Coordinates(x, y));
+                    rovers.Add(this.activeRover);
                 }
             } catch (Exception e) {
                 Console.WriteLine(e.Message);
@@ -54,81 +54,64 @@ namespace marsrover
         }
 
         // Process an instruction like "LMLMRM"
-        public void processInstruction(string instruction)
+        // Return a location and direction like "3 2 S"
+        public string handleMoveCommand(string instruction)
         {
+            // todo: replace string with types
             // If this is somehow called when we don't have an active rover yet,
             // return early
             if (this.activeRover == null) {
-                return;
+                return "";
             }
 
-            foreach (char c in instruction) {
-                if (c == 'M')
+            CompassDirection newDirection = this.activeRover.currentDirection;
+            Coordinates newCoordinates = this.activeRover.currentCoordinates;
+
+            foreach (char c in instruction.ToLower()) {
+                // Todo: replace string with types
+                if (c == 'm')
                 {
-                    // todo
-                    // processMovement
+                    newCoordinates = this.activeRover.CalculateMove();
+                    // Before updating the location of the rover, check that the new location won't move it
+                    // off the plateau or collide with another rover.
+                    // If it would, the coordinates stay the same and we will move on to the next instruction.
+                    if (isSquareOnGrid(newCoordinates) && !isRoverOnSquare(newCoordinates))
+                    {
+                        this.activeRover.currentCoordinates = newCoordinates;
+                    }
                 }
-                else if (c == 'L' || c == 'R')
+                else if (c == 'l' || c == 'r')
                 {
-                    Direction turnDirection = ConvertLetterToDirection(c.ToString());
-                    CompassDirection newDirection = this.activeRover.Rotate(turnDirection);
+                    Direction turnDirection = Converters.LetterToDirection(c.ToString());
+                    newDirection = this.activeRover.Rotate(turnDirection);
                 }
             }
+
+            StringBuilder locationString = new StringBuilder();
+            locationString.Append(this.activeRover.currentCoordinates.X.ToString() + " " + this.activeRover.currentCoordinates.Y.ToString() + " " + Converters.CompassDirectionToLetter(this.activeRover.currentDirection));
+            return locationString.ToString();
         }
 
-        // todo move this elsewhere
-        private static CompassDirection ConvertLetterToCompassDirection(string direction) => direction switch
+        public bool isSquareOnGrid(Coordinates targetCoordinates)
         {
-            "N" => CompassDirection.North,
-            "E" => CompassDirection.East,
-            "S" => CompassDirection.South,
-            "W" => CompassDirection.West,
-            _ => throw new ArgumentOutOfRangeException(direction, "Not a valid direction string"),
-        };
-
-        private static Direction ConvertLetterToDirection(string letter) => letter switch
-        {
-            "L" => Direction.Left,
-            "R" => Direction.Right,
-            _ => throw new ArgumentOutOfRangeException(letter, "Not a valid direction"),
-        };
-
-        // Moves the rover one square in its curent direction.
-        // If that would move the rover off the grid, do nothing.
-        // Return the new coordinates of the rover.
-        private Coordinates moveRover()
-        {
-            if (this.activeRover == null)
-            {
-                throw new NullReferenceException(message: "Attempted to move before setting rover location");
-            }
-
-            Coordinates currentCoords = this.activeRover.currentCoordinates;
-            Coordinates newCoords = currentCoords;
-            if (this.activeRover.currentDirection == CompassDirection.North)
-            {
-                newCoords.Y = currentCoords.Y + 1;
-                // Check that we are still on the grid.
-                if (newCoords.Y < this.height)
-                {
-                    return newCoords;
-                }
-                else
-                {
-                    return currentCoords;
-                }
-            }
-            else if (this.activeRover.currentDirection == CompassDirection.East)
-            {
-                newCoords.X = currentCoords.X + 1;
-                // Check that we are still on the grid
-                if (newCoords.X < this.width)
-                {
-                    return newCoords;
-                }
-            }
-
+            return (targetCoordinates.X >= 0 && targetCoordinates.X <= this.neCorner.X) &&
+                   (targetCoordinates.Y >= 0 && targetCoordinates.Y <= this.neCorner.Y);
         }
+
+        public bool isRoverOnSquare(Coordinates targetCoordinates)
+        {
+            foreach (Rover r in this.rovers)
+            {
+                if (r.currentCoordinates.X == targetCoordinates.X &&
+                    r.currentCoordinates.Y == targetCoordinates.Y)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
     }
 
     public struct Coordinates

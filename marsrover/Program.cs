@@ -1,28 +1,66 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using marsrover;
 
+Console.WriteLine("Welcome to Mars Rover. Enter 'q' to quit");
 Console.WriteLine("Enter grid size (e.g 5 5)");
-string? command = Console.ReadLine();
-Grid grid;
-// process grid size command. todo: error handling
-if (command != null)
-{
-    int width = Int32.Parse(command[0].ToString());
-    int height = Int32.Parse(command[2].ToString());
-    
-    grid = new Grid(width, height);
+Grid? grid = null;
+Command command;
+string? input;
 
-    while ((command = Console.ReadLine()) != null)
+    
+
+Console.WriteLine("Enter starting location");
+
+while ((input = Console.ReadLine()) != null)
+{
+    try
     {
-        // todo: add better validation
-        if (Char.IsNumber(command[0])) {
-            grid.setStartingLocation(command);
+        command = CommandParser.Parse(input);
+
+        if (command.type == CommandTypes.SetGridSize)
+        {
+            int width = Int32.Parse(command.commandInput[0].ToString());
+            int height = Int32.Parse(command.commandInput[2].ToString());
+
+            grid = new Grid(width, height);
+
         }
 
-        if (command.StartsWith('L') || command.StartsWith('R') || command.StartsWith('M'))
+        if (command.type == CommandTypes.Exit)
         {
-            grid.processInstruction(command);
+            Environment.Exit(0);
+        }
+
+        if (command.type == CommandTypes.SetLocation)
+        {
+            if (grid == null)
+            {
+                Console.WriteLine("Plateau size must be input first");
+                continue;
+            }
+
+            grid.handleStartingLocationCommand(command.commandInput);
+            Console.WriteLine("Enter rover instructions");
+        }
+
+        if (command.type == CommandTypes.MoveAndRotate)
+        {
+            if (grid == null)
+            {
+                Console.WriteLine("Plateau size must be input first");
+                continue;
+            }
+
+            // TODO: ensure rover position set first?
+
+            Console.WriteLine(grid.handleMoveCommand(command.commandInput));
+            Console.WriteLine("Enter starting location");
         }
     }
+    catch (ArgumentException)
+    {
+        Console.WriteLine("Invalid command");
+    }
 }
+
 
