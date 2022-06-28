@@ -10,9 +10,13 @@
   <ItemGroup>
     <None Remove="NUnit" />
     <None Remove="NUnit3TestAdapter" />
+    <None Remove="src\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="NUnit" Version="3.13.3" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="src\" />
   </ItemGroup>
 </Project>

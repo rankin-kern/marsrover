@@ -19,13 +19,6 @@
             CompassDirection.West => "W",
             _ => throw new ArgumentOutOfRangeException("Not a valid direction"),
         };
-
-        public static Direction LetterToDirection(string letter) => letter.ToLower() switch
-        {
-            "l" => Direction.Left,
-            "r" => Direction.Right,
-            _ => throw new ArgumentOutOfRangeException(letter, "Not a valid direction"),
-        };
     }
 }
 

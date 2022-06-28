@@ -1,68 +1,88 @@
 ﻿using System;
-namespace marsrover
+namespace marsrover;
+
+public class Rover : IRover
 {
-    public class Rover
+    private CompassDirection currentDirection;
+    public CompassDirection CurrentDirection
     {
-        public CompassDirection currentDirection { set; get; }
+        get => currentDirection;
+    }
 
-        public Coordinates currentCoordinates { set; get; }
+    private Coordinates currentCoordinates;
+    public Coordinates CurrentCoordinates
+    {
+        get => currentCoordinates;
+    }
 
-        public Rover(CompassDirection direction, Coordinates coordinates)
+    private IMovementValidator validator;
+
+    public Rover(CompassDirection direction, Coordinates coordinates, IMovementValidator validator)
+    {
+        this.currentDirection = direction;
+        this.currentCoordinates = coordinates;
+        this.validator = validator;
+    }
+
+    public CompassDirection Rotate(RoverCommand command)
+    {
+        if (!(command.Equals(RoverCommand.Left) || command.Equals(RoverCommand.Right)))
         {
-            currentDirection = direction;
-            currentCoordinates = coordinates;
+            throw new ArgumentException("Command is not a turn direction");
         }
 
-        public CompassDirection Rotate(Direction turnDirection)
-        {
-            CompassDirection newDirection;
+        CompassDirection newDirection;
             
-            if (currentDirection == CompassDirection.North)
-            {
-                newDirection = turnDirection == Direction.Left ? CompassDirection.West : CompassDirection.East;
-            }
-            else if (currentDirection == CompassDirection.East)
-            {
-                newDirection = turnDirection == Direction.Left ? CompassDirection.North : CompassDirection.South;
-            }
-            else if (currentDirection == CompassDirection.South)
-            {
-                newDirection = turnDirection == Direction.Left ? CompassDirection.East : CompassDirection.West;
-            }
-            else // currentDirection == CompassDirection.West
-            {
-                newDirection = turnDirection == Direction.Left ? CompassDirection.South : CompassDirection.North;
-            }
-
-            this.currentDirection = newDirection;
-            return newDirection;
-        }
-
-        // Returns the grid square the rover would move to
-        // if a move command was processed.
-        public Coordinates CalculateMove()
+        if (currentDirection == CompassDirection.North)
         {
-            Coordinates currentCoords = this.currentCoordinates;
-            Coordinates newCoords = currentCoords;
-            if (this.currentDirection == CompassDirection.North)
-            {
-               newCoords.Y = currentCoords.Y + 1;
-            }
-            else if (this.currentDirection == CompassDirection.East)
-            {
-                newCoords.X = currentCoords.X + 1;
-            }
-            else if (this.currentDirection == CompassDirection.South)
-            {
-                newCoords.Y = currentCoords.Y - 1;
-            }
-            else if (this.currentDirection == CompassDirection.West)
-            {
-                newCoords.X = currentCoords.X - 1;
-            }
-
-            return newCoords;
+            newDirection = command == RoverCommand.Left ? CompassDirection.West : CompassDirection.East;
         }
+        else if (currentDirection == CompassDirection.East)
+        {
+            newDirection = command == RoverCommand.Left ? CompassDirection.North : CompassDirection.South;
+        }
+        else if (currentDirection == CompassDirection.South)
+        {
+            newDirection = command == RoverCommand.Left ? CompassDirection.East : CompassDirection.West;
+        }
+        else // currentDirection == CompassDirection.West
+        {
+            newDirection = command == RoverCommand.Left ? CompassDirection.South : CompassDirection.North;
+        }
+
+        this.currentDirection = newDirection;
+        return newDirection;
+    }
+
+    public Coordinates Move()
+    {
+        Coordinates currentCoords = this.currentCoordinates;
+        Coordinates newCoords = currentCoords;
+        if (this.currentDirection == CompassDirection.North)
+        {
+            newCoords.Y = currentCoords.Y + 1;
+        }
+        else if (this.currentDirection == CompassDirection.East)
+        {
+            newCoords.X = currentCoords.X + 1;
+        }
+        else if (this.currentDirection == CompassDirection.South)
+        {
+            newCoords.Y = currentCoords.Y - 1;
+        }
+        else if (this.currentDirection == CompassDirection.West)
+        {
+            newCoords.X = currentCoords.X - 1;
+        }
+
+        // Before updating the location of the rover, check that the new location won't move it
+        // off the plateau or collide with another rover.
+        // If it would, the coordinates stay the same and we will move on to the next instruction.
+        if (this.validator.isSquareOnGrid(newCoords) && this.validator.isSquareEmpty(newCoords))
+        {
+            this.currentCoordinates = newCoords;
+        }
+
+        return this.currentCoordinates;
     }
 }
-

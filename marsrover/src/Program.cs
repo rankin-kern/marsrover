@@ -7,15 +7,11 @@ Grid? grid = null;
 Command command;
 string? input;
 
-    
-
-Console.WriteLine("Enter starting location");
-
 while ((input = Console.ReadLine()) != null)
 {
     try
     {
-        command = CommandParser.Parse(input);
+        command = CommandParser.ParseInput(input);
 
         if (command.type == CommandTypes.SetGridSize)
         {
@@ -24,6 +20,7 @@ while ((input = Console.ReadLine()) != null)
 
             grid = new Grid(width, height);
 
+            Console.WriteLine("Enter starting location");
         }
 
         if (command.type == CommandTypes.Exit)
@@ -51,7 +48,11 @@ while ((input = Console.ReadLine()) != null)
                 continue;
             }
 
-            // TODO: ensure rover position set first?
+            if (grid.activeRover == null)
+            {
+                Console.WriteLine("Rover position must be input first");
+                continue;
+            }
 
             Console.WriteLine(grid.handleMoveCommand(command.commandInput));
             Console.WriteLine("Enter starting location");

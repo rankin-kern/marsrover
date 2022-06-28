@@ -14,8 +14,8 @@ public class GridTests
     {
         Grid testGrid = new Grid(5, 5);
         testGrid.handleStartingLocationCommand("0 0 N");
-        Assert.AreEqual(testGrid.activeRover.currentCoordinates, new Coordinates(0, 0));
-        Assert.AreEqual(testGrid.activeRover.currentDirection, CompassDirection.North);
+        Assert.AreEqual(testGrid.activeRover.CurrentCoordinates, new Coordinates(0, 0));
+        Assert.AreEqual(testGrid.activeRover.CurrentDirection, CompassDirection.North);
     }
 
     [Test]

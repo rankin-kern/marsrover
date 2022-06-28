@@ -1,29 +1,12 @@
-﻿using System;
-namespace marsrover
+﻿namespace marsrover
 {
-    public enum CommandTypes
-    {
-        Exit,
-        SetLocation,
-        MoveAndRotate,
-        SetGridSize
-    }
-
-    public struct Command
-    {
-        public CommandTypes type;
-        public string commandInput;
-    }
-
-    
-
     // Responsible for parsing command line arguments into command abstractions
     public static class CommandParser
     {
         const int MAX_GRID_SIZE_INPUT = 3;
         const int MAX_STARTING_LOCATION_INPUT = 5;
 
-        public static Command Parse(string inputCommand)
+        public static Command ParseInput(string inputCommand)
         {
             inputCommand = inputCommand.Trim().ToLower();
             Command command = new Command();
@@ -49,6 +32,42 @@ namespace marsrover
             }
 
             return command;
+        }
+
+        public static RoverCommand[] ParseRoverCommand(string input)
+        {
+            RoverCommand[] commands = new RoverCommand[input.Length];
+
+            for (int i = 0; i < input.Length; i++)
+            {
+                if (input[i] == 'l')
+                {
+                    commands[i] = RoverCommand.Left;
+                } else if (input[i] == 'r') {
+                    commands[i] = RoverCommand.Right;
+                } else if (input[i] == 'm')
+                {
+                    commands[i] = RoverCommand.Move;
+                }
+            }
+
+            return commands;
+
+        }
+
+        public static StartCommand ParseStartCommand(string input)
+        {
+            string[] parts = input.Split(' ');
+            int x = Int32.Parse(parts[0]);
+            int y = Int32.Parse(parts[1]);
+            Coordinates start = new Coordinates(x, y);
+            CompassDirection direction = Converters.LetterToCompassDirection(parts[2]);
+
+            return new StartCommand
+            {
+                startCoordinates = start,
+                startDirection = direction
+            };
         }
 
         private static bool isValidGridSizeCommand(string input)
