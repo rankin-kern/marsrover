@@ -1,6 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using marsrover;
 
+
 Console.WriteLine("Welcome to Mars Rover. Enter 'q' to quit");
 Console.WriteLine("Enter grid size (e.g 5 5)");
 Grid? grid = null;
@@ -15,10 +16,9 @@ while ((input = Console.ReadLine()) != null)
 
         if (command.type == CommandTypes.SetGridSize)
         {
-            int width = Int32.Parse(command.commandInput[0].ToString());
-            int height = Int32.Parse(command.commandInput[2].ToString());
+            Coordinates neCorner = CommandParser.ParseGridSizeCommand(command.commandInput);
 
-            grid = new Grid(width, height);
+            grid = new Grid(neCorner.X, neCorner.Y);
 
             Console.WriteLine("Enter starting location");
         }
@@ -36,7 +36,8 @@ while ((input = Console.ReadLine()) != null)
                 continue;
             }
 
-            grid.handleStartingLocationCommand(command.commandInput);
+            StartCommand start = CommandParser.ParseStartCommand(command.commandInput);
+            grid.addRover(start);
             Console.WriteLine("Enter rover instructions");
         }
 
@@ -54,13 +55,26 @@ while ((input = Console.ReadLine()) != null)
                 continue;
             }
 
-            Console.WriteLine(grid.handleMoveCommand(command.commandInput));
-            Console.WriteLine("Enter starting location");
+            RoverCommand[] commands = CommandParser.ParseRoverCommand(command.commandInput);
+            grid.activeRover.Commands = commands;
+            
+            Console.WriteLine("Enter starting location of next rover, or 'r' to run commands");
+        }
+
+        if (command.type == CommandTypes.Run)
+        {
+            if (grid == null)
+            {
+                Console.WriteLine("Plateau and rovers must be input first");
+                continue;
+            }
+
+            Console.Write(grid.moveRovers());
         }
     }
-    catch (ArgumentException)
+    catch (Exception e)
     {
-        Console.WriteLine("Invalid command");
+        Console.WriteLine(e.Message);
     }
 }
 

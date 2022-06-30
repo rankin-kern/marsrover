@@ -1,33 +1,33 @@
-﻿namespace marsrover;
-
-public class MovementValidator : IMovementValidator
+﻿namespace marsrover
 {
-    private Grid grid;
-
-    public MovementValidator(Grid grid)
+    public class MovementValidator : IMovementValidator
     {
-        this.grid = grid;
-    }
+        private Grid grid;
 
-    public bool isSquareOnGrid(Coordinates square)
-    {
-        return(square.X >= 0 && square.X <= this.grid.getBounds().X) &&
-                   (square.Y >= 0 && square.Y <= this.grid.getBounds().Y);
-    }
-
-    public bool isSquareEmpty(Coordinates square)
-    {
-        foreach (Rover r in this.grid.getRovers())
+        public MovementValidator(Grid grid)
         {
-            if (r.CurrentCoordinates.X == square.X &&
-                r.CurrentCoordinates.Y == square.Y)
-            {
-                return false;
-            }
+            this.grid = grid;
         }
 
-        return true;
+        public bool isSquareOnGrid(Coordinates square)
+        {
+            return (square.X >= 0 && square.X <= this.grid.getBounds().X) &&
+                       (square.Y >= 0 && square.Y <= this.grid.getBounds().Y);
+        }
+
+        public bool isSquareEmpty(Coordinates square)
+        {
+            foreach (Rover r in this.grid.getRovers())
+            {
+                if (r.CurrentCoordinates.X == square.X &&
+                    r.CurrentCoordinates.Y == square.Y)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
     }
 }
-
 

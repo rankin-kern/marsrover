@@ -1,7 +1,4 @@
-﻿// A class that defines an x,y coordinate based grid
-// divided into squares.
-
-namespace marsrover
+﻿namespace marsrover
 {
     public enum CompassDirection
     {

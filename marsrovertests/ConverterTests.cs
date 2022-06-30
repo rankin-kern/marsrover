@@ -6,20 +6,20 @@ public class ConverterTests
     [Test]
     public void assertLetterToCompassDirection()
     {
-        Assert.AreEqual(CompassDirection.East, Converters.LetterToCompassDirection("E"));
-        Assert.AreEqual(CompassDirection.North, Converters.LetterToCompassDirection("N"));
-        Assert.AreEqual(CompassDirection.South, Converters.LetterToCompassDirection("S"));
-        Assert.AreEqual(CompassDirection.West, Converters.LetterToCompassDirection("W"));
+        Assert.That(Converters.LetterToCompassDirection("E"), Is.EqualTo(CompassDirection.East));
+        Assert.That(Converters.LetterToCompassDirection("N"), Is.EqualTo(CompassDirection.North));
+        Assert.That(Converters.LetterToCompassDirection("S"), Is.EqualTo(CompassDirection.South));
+        Assert.That(Converters.LetterToCompassDirection("W"), Is.EqualTo(CompassDirection.West));
 
     }
 
     [Test]
     public void assertCompassDirectionToLetter()
     {
-        Assert.AreEqual("N", Converters.CompassDirectionToLetter(CompassDirection.North));
-        Assert.AreEqual("E", Converters.CompassDirectionToLetter(CompassDirection.East));
-        Assert.AreEqual("S", Converters.CompassDirectionToLetter(CompassDirection.South));
-        Assert.AreEqual("W", Converters.CompassDirectionToLetter(CompassDirection.West));
+        Assert.That(Converters.CompassDirectionToLetter(CompassDirection.North), Is.EqualTo("N"));
+        Assert.That(Converters.CompassDirectionToLetter(CompassDirection.East), Is.EqualTo("E"));
+        Assert.That(Converters.CompassDirectionToLetter(CompassDirection.South), Is.EqualTo("S"));
+        Assert.That(Converters.CompassDirectionToLetter(CompassDirection.West), Is.EqualTo("W"));
     }
 }
 

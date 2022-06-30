@@ -1,9 +1,11 @@
-﻿namespace marsrover;
-
-public enum RoverCommand
+﻿namespace marsrover
+{
+    public enum RoverCommand
     {
         Left,
         Right,
         Move
     }
+}
+
 

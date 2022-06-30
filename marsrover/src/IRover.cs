@@ -1,12 +1,12 @@
-﻿using System;
-namespace marsrover;
+﻿namespace marsrover;
 
 public interface IRover
 {
     public Coordinates CurrentCoordinates { get; }
-    public CompassDirection CurrentDirection { get;  }
+    public CompassDirection CurrentDirection { get; }
+    public RoverCommand[] Commands { set; }
 
-    public Coordinates Move();
-    public CompassDirection Rotate(RoverCommand command);
+ 
+    public string ProcessCommands();
 }
 

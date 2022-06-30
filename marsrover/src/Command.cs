@@ -1,16 +1,17 @@
-﻿using System;
-namespace marsrover;
-
-public enum CommandTypes
+﻿namespace marsrover
 {
-    Exit,
-    SetLocation,
-    MoveAndRotate,
-    SetGridSize
-}
+    public enum CommandTypes
+    {
+        Exit,
+        SetLocation,
+        MoveAndRotate,
+        SetGridSize,
+        Run
+    }
 
-public struct Command
-{
-    public CommandTypes type;
-    public string commandInput;
+    public struct Command
+    {
+        public CommandTypes type;
+        public string commandInput;
+    }
 }
