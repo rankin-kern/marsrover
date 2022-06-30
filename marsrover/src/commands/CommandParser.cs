@@ -3,6 +3,8 @@
     // Responsible for parsing command line arguments into command abstractions
     public static class CommandParser
     {
+        const int MAX_GRID_HEIGHT = 999;
+        const int MAX_GRID_WIDTH = 999;
         const int GRID_SIZE_ARGS = 2;
         const int START_ARGS = 3;
 
@@ -78,7 +80,7 @@
             };
         }
 
-        public static Coordinates ParseGridSizeCommand(string input)
+        private static Coordinates ParseGridSizeCommand(string input)
         {
             string[] parts = input.Split(' ');
             int x = Int32.Parse(parts[0]);
@@ -98,13 +100,23 @@
                 return false;
             }
 
-            if (!Int32.TryParse(parts[0], out int x))
+            int x;
+            if (!Int32.TryParse(parts[0], out x))
             {
                 return false;
             }
 
-            
-            if (!Int32.TryParse(parts[1], out int y))
+            int y;
+            if (!Int32.TryParse(parts[1], out y))
+            {
+                return false;
+            }
+
+            if (x <= 0 || y <= 0) {
+                return false;
+            }
+
+            if (x > MAX_GRID_WIDTH || y > MAX_GRID_HEIGHT)
             {
                 return false;
             }

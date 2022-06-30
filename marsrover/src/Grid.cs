@@ -37,6 +37,10 @@ namespace marsrover
                 this.activeRover = new Rover(command.startDirection, command.startCoordinates, this.validator);
                 rovers.Add(this.activeRover);
             }
+            else
+            {
+                throw new InvalidOperationException("Start location invalid");
+            }
         }
 
         // Process an instruction like "LMLMRM"
@@ -77,11 +81,6 @@ namespace marsrover
             }
 
             return false;
-        }
-
-        public List<IRover> GetRovers()
-        {
-            return this.rovers;
         }
 
         public void SetRoverCommands(RoverCommand[] commands)

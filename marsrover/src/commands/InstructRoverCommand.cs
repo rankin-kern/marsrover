@@ -1,5 +1,7 @@
 ﻿namespace marsrover.commands
 {
+    // Command for setting the move and rotate commands on the last positioned rover
+    // E.g. "LLMMMRML"
     public class InstructRoverCommand : IGridCommand
     {
         private RoverCommand[] commands;

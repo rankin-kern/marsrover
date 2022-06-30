@@ -37,6 +37,53 @@ namespace marsrovertests
             }
         }
 
+        [Test]
+        public void assertNegativeGridSizeThrowsException()
+        {
+            string badInput = "-1 -1";
+            try
+            {
+                CommandParser.ParseInput(badInput);
+            } catch (Exception e)
+            {
+                Assert.IsInstanceOf(typeof(ArgumentException), e);
+                Assert.That(e.Message, Is.EqualTo("Invalid command"));
+            }
+        }
+
+        [Test]
+        public void assertGridLargerThanMaxThrowsException()
+        {
+            string badInput = "50 1000";
+            try
+            {
+                CommandParser.ParseInput(badInput);
+            }
+            catch (Exception e)
+            {
+                Assert.IsInstanceOf(typeof(ArgumentException), e);
+                Assert.That(e.Message, Is.EqualTo("Invalid command"));
+            }
+
+            badInput = "1000 900";
+            try
+            {
+                CommandParser.ParseInput(badInput);
+            }
+            catch (Exception e)
+            {
+                Assert.IsInstanceOf(typeof(ArgumentException), e);
+                Assert.That(e.Message, Is.EqualTo("Invalid command"));
+            }
+        }
+
+        [Test]
+        public void assertMaxGridSizeSucceeds()
+        {
+            string input = "999 999";
+            IGridCommand command = CommandParser.ParseInput(input);
+            Assert.That(command.GetType(), Is.EqualTo(typeof(GridSizeCommand)));
+        }
 
         [Test]
         public void assertValidRoverMovement()
