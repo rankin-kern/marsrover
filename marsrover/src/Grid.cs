@@ -1,6 +1,7 @@
 ﻿// A class that defines an x,y coordinate based grid
 // divided into squares.
 using System.Text;
+using marsrover.commands;
 
 namespace marsrover
 {

@@ -1,4 +1,4 @@
-﻿namespace marsrover
+﻿namespace marsrover.commands
 {
     // Responsible for parsing command line arguments into command abstractions
     public static class CommandParser
@@ -9,33 +9,26 @@
         public static IGridCommand ParseInput(string inputCommand)
         {
             inputCommand = inputCommand.Trim().ToLower();
-            Command command = new Command();
-            command.commandInput = inputCommand;
             IGridCommand? gridCommand = null;
 
             if (inputCommand == "q")
             {
-                command.type = CommandTypes.Exit;
                 gridCommand = new ExitCommand();
             }
             else if (inputCommand == "r")
             {
-                command.type = CommandTypes.Run;
                 gridCommand = new MoveRoversCommand();
             }
             else if (isValidGridSizeCommand(inputCommand)) {
-                command.type = CommandTypes.SetGridSize;
                 gridCommand = new GridSizeCommand(ParseGridSizeCommand(inputCommand));
             }
-            else if (isValidLocationCommand(inputCommand))
+            else if (isValidStartCommand(inputCommand))
             {
-                command.type = CommandTypes.SetLocation;
                 gridCommand = new AddRoverCommand(ParseStartCommand(inputCommand));
                 
             }
             else if (isValidMovementCommand(inputCommand))
             {
-                command.type = CommandTypes.MoveAndRotate;
                 gridCommand = new InstructRoverCommand(ParseRoverCommand(inputCommand));
             }
             else
@@ -119,11 +112,11 @@
             return true;
         }
 
-        private static bool isValidLocationCommand(string input)
+        private static bool isValidStartCommand(string input)
         {
             string[] parts = input.Split(' ');
 
-            if (parts.Length != 3)
+            if (parts.Length != START_ARGS)
             {
                 return false;
             }

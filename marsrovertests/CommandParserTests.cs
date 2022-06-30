@@ -1,4 +1,4 @@
-﻿using marsrover;
+﻿using marsrover.commands;
 namespace marsrovertests
 {
     public class CommandParserTests

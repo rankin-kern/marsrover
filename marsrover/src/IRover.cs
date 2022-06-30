@@ -1,12 +1,16 @@
-﻿namespace marsrover;
+﻿using marsrover.commands;
 
-public interface IRover
+namespace marsrover
 {
-    public Coordinates CurrentCoordinates { get; }
-    public CompassDirection CurrentDirection { get; }
-    public RoverCommand[] Commands { set; }
+    public interface IRover
+    {
+        public Coordinates CurrentCoordinates { get; }
+        public CompassDirection CurrentDirection { get; }
+        public RoverCommand[] Commands { set; }
 
- 
-    public string ProcessCommands();
+
+        public string ProcessCommands();
+    }
 }
+
 

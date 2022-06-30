@@ -1,5 +1,4 @@
-﻿using System;
-namespace marsrover
+﻿namespace marsrover.commands
 {
     public class ExitCommand : IGridCommand
     {

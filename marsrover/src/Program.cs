@@ -1,5 +1,6 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using marsrover;
+using marsrover.commands;
 
 Console.WriteLine("Welcome to Mars Rover. Enter 'q' to quit");
 Console.WriteLine("Enter grid size (e.g 5 5)");

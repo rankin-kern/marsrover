@@ -1,4 +1,4 @@
-﻿namespace marsrover
+﻿namespace marsrover.commands
 {
     public struct StartCommand
     {

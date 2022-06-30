@@ -1,44 +1,46 @@
-﻿namespace marsrovertests;
-using marsrover;
+﻿using marsrover;
+using marsrover.commands;
 
-public class GridTests
+namespace marsrovertests
 {
-    [SetUp]
-    public void Setup()
+    public class GridTests
     {
-        
-    }
-
-    [Test]
-    public void assertStartingLocation()
-    {
-        Grid testGrid = new Grid();
-        testGrid.Corner = new Coordinates { X = 5, Y = 5};
-        StartCommand start = new StartCommand
+        [SetUp]
+        public void Setup()
         {
-            startCoordinates = { X = 0, Y = 0 },
-            startDirection = CompassDirection.North
-        };
 
-        testGrid.addRover(start);
-        Assert.That(testGrid.activeRover, Is.Not.Null);
-        Assert.That(testGrid.activeRover.CurrentCoordinates, Is.EqualTo(new Coordinates(0, 0)));
-        Assert.That(testGrid.activeRover.CurrentDirection, Is.EqualTo(CompassDirection.North));
-    }
+        }
 
-    [Test]
-    public void assertProcessInstructionValid()
-    {
-        Grid testGrid = new Grid();
-        testGrid.Corner = new Coordinates { X = 5, Y = 5 };
-        StartCommand start = new StartCommand
+        [Test]
+        public void assertStartingLocation()
         {
-            startCoordinates = { X = 1, Y = 2 },
-            startDirection = CompassDirection.North
-        };
+            Grid testGrid = new Grid();
+            testGrid.Corner = new Coordinates { X = 5, Y = 5 };
+            StartCommand start = new StartCommand
+            {
+                startCoordinates = { X = 0, Y = 0 },
+                startDirection = CompassDirection.North
+            };
 
-        testGrid.addRover(start);
-        RoverCommand[] command1 = {
+            testGrid.addRover(start);
+            Assert.That(testGrid.activeRover, Is.Not.Null);
+            Assert.That(testGrid.activeRover.CurrentCoordinates, Is.EqualTo(new Coordinates(0, 0)));
+            Assert.That(testGrid.activeRover.CurrentDirection, Is.EqualTo(CompassDirection.North));
+        }
+
+        [Test]
+        public void assertProcessInstructionValid()
+        {
+            Grid testGrid = new Grid();
+            testGrid.Corner = new Coordinates { X = 5, Y = 5 };
+            StartCommand start = new StartCommand
+            {
+                startCoordinates = { X = 1, Y = 2 },
+                startDirection = CompassDirection.North
+            };
+
+            testGrid.addRover(start);
+            RoverCommand[] command1 = {
             RoverCommand.Left,
             RoverCommand.Move,
             RoverCommand.Left,
@@ -49,19 +51,19 @@ public class GridTests
             RoverCommand.Move,
             RoverCommand.Move
         };
-        Assert.IsNotNull(testGrid.activeRover);
+            Assert.IsNotNull(testGrid.activeRover);
 
-        testGrid.activeRover.Commands = command1;
+            testGrid.activeRover.Commands = command1;
 
-        start = new StartCommand
-        {
-            startCoordinates = { X = 3, Y = 3 },
-            startDirection = CompassDirection.East
-        };
+            start = new StartCommand
+            {
+                startCoordinates = { X = 3, Y = 3 },
+                startDirection = CompassDirection.East
+            };
 
-        testGrid.addRover(start);
+            testGrid.addRover(start);
 
-        RoverCommand[] command2 = {
+            RoverCommand[] command2 = {
             RoverCommand.Move,
             RoverCommand.Move,
             RoverCommand.Right,
@@ -74,84 +76,86 @@ public class GridTests
             RoverCommand.Move
         };
 
-        testGrid.activeRover.Commands = command2;
-        string result = testGrid.moveRovers();
-        Assert.That(result, Is.EqualTo("1 3 N" + Environment.NewLine + "5 1 E" + Environment.NewLine));
-    }
+            testGrid.activeRover.Commands = command2;
+            string result = testGrid.moveRovers();
+            Assert.That(result, Is.EqualTo("1 3 N" + Environment.NewLine + "5 1 E" + Environment.NewLine));
+        }
 
-    [Test]
-    public void assertRoverGridEdge()
-    {
-        Grid testGrid = new Grid();
-        testGrid.Corner = new Coordinates { X = 8, Y = 8 };
-        StartCommand start = new StartCommand
+        [Test]
+        public void assertRoverGridEdge()
         {
-            startCoordinates = { X = 7, Y = 7 },
-            startDirection = CompassDirection.East
-        };
+            Grid testGrid = new Grid();
+            testGrid.Corner = new Coordinates { X = 8, Y = 8 };
+            StartCommand start = new StartCommand
+            {
+                startCoordinates = { X = 7, Y = 7 },
+                startDirection = CompassDirection.East
+            };
 
-        testGrid.addRover(start);
+            testGrid.addRover(start);
 
-        RoverCommand[] move1 =
-        {
+            RoverCommand[] move1 =
+            {
             RoverCommand.Move
         };
 
-        Assert.IsNotNull(testGrid.activeRover);
-        testGrid.activeRover.Commands = move1;
-        string result = testGrid.moveRovers();
-        Assert.That(result, Is.EqualTo("8 7 E" + Environment.NewLine));
+            Assert.IsNotNull(testGrid.activeRover);
+            testGrid.activeRover.Commands = move1;
+            string result = testGrid.moveRovers();
+            Assert.That(result, Is.EqualTo("8 7 E" + Environment.NewLine));
 
-        testGrid.activeRover.Commands = move1;
-        result = testGrid.moveRovers();
-        Assert.That(result, Is.EqualTo("8 7 E" + Environment.NewLine));
+            testGrid.activeRover.Commands = move1;
+            result = testGrid.moveRovers();
+            Assert.That(result, Is.EqualTo("8 7 E" + Environment.NewLine));
 
-        RoverCommand[] move2 =
-        {
+            RoverCommand[] move2 =
+            {
             RoverCommand.Left,
             RoverCommand.Move
         };
 
-        testGrid.activeRover.Commands = move2;
-        result = testGrid.moveRovers();
-        Assert.That(result, Is.EqualTo("8 8 N" + Environment.NewLine));
+            testGrid.activeRover.Commands = move2;
+            result = testGrid.moveRovers();
+            Assert.That(result, Is.EqualTo("8 8 N" + Environment.NewLine));
 
-        testGrid.activeRover.Commands = move2;
-        testGrid.moveRovers();
-        Assert.That(result, Is.EqualTo("8 8 N" + Environment.NewLine));
-    }
+            testGrid.activeRover.Commands = move2;
+            testGrid.moveRovers();
+            Assert.That(result, Is.EqualTo("8 8 N" + Environment.NewLine));
+        }
 
-    [Test]
-    public void assertRoversCantCollide()
-    {
-        Grid testGrid = new Grid();
-        testGrid.Corner = new Coordinates { X = 5, Y = 5 };
-        StartCommand start = new StartCommand
+        [Test]
+        public void assertRoversCantCollide()
         {
-            startCoordinates = { X = 0, Y = 0 },
-            startDirection = CompassDirection.North
-        };
+            Grid testGrid = new Grid();
+            testGrid.Corner = new Coordinates { X = 5, Y = 5 };
+            StartCommand start = new StartCommand
+            {
+                startCoordinates = { X = 0, Y = 0 },
+                startDirection = CompassDirection.North
+            };
 
-        testGrid.addRover(start);
-        RoverCommand[] move =
-        {
+            testGrid.addRover(start);
+            RoverCommand[] move =
+            {
             RoverCommand.Right,
             RoverCommand.Move
         };
-        Assert.IsNotNull(testGrid.activeRover);
+            Assert.IsNotNull(testGrid.activeRover);
 
-        testGrid.activeRover.Commands = move;
+            testGrid.activeRover.Commands = move;
 
-        start = new StartCommand
-        {
-            startCoordinates = { X = 1, Y = 1 },
-            startDirection = CompassDirection.East
-        };
-        testGrid.addRover(start);
+            start = new StartCommand
+            {
+                startCoordinates = { X = 1, Y = 1 },
+                startDirection = CompassDirection.East
+            };
+            testGrid.addRover(start);
 
-        testGrid.activeRover.Commands = move;
+            testGrid.activeRover.Commands = move;
 
-        string result = testGrid.moveRovers();
-        Assert.That(result, Is.EqualTo("1 0 E" + Environment.NewLine + "1 1 S" + Environment.NewLine));
+            string result = testGrid.moveRovers();
+            Assert.That(result, Is.EqualTo("1 0 E" + Environment.NewLine + "1 1 S" + Environment.NewLine));
+        }
     }
 }
+
