@@ -1,5 +1,5 @@
 # Mars Rover Challenge
-A C# implementation of https://code.google.com/archive/p/marsrovertechchallenge/
+A C# implementation of https://code.google.com/archive/p/marsrovertechchallenge/ . The solution is implemented as an interactive command line app. Users can provide the size of the Martian plateau being explored, and input starting locations/directions and commands for each rover exploring the plateau. Once all of the rovers and their commands have been entered, users can run the commands. This will update each rover's location and direction in the order they were added to the plateau, and avoid collisions or running off the plateau. 
 
 ## Instructions to build and run
 Open the marsrover.sln file in Visual Studio. From the build menu, select Build Solution. Then run either inside Visual Studio by pressing the Play button or selecting Start from the Debug menu, or find the marsrover executable in your build output directory and run it from there.
