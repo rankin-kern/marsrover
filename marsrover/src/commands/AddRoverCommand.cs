@@ -9,10 +9,10 @@
             this.start = startCommand;
         }
 
-        public string Execute(Grid grid)
+        public string Execute(IPlateau grid)
         {
-            grid.addRover(start);
-            return "Enter starting location of next rover, or 'r' to run commands";
+            grid.AddRover(start);
+            return "Enter rover instructions";
         }
     }
 }

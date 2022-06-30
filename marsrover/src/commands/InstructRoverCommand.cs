@@ -9,14 +9,9 @@
             this.commands = commands;
         }
 
-        public string Execute(Grid grid)
+        public string Execute(IPlateau grid)
         {
-            if (grid.activeRover == null)
-            {
-                throw new InvalidOperationException("rover position not set");
-            }
-
-            grid.activeRover.Commands = this.commands;
+            grid.SetRoverCommands(this.commands);
 
             return "Enter starting location of next rover, or 'r' to run commands";
         }

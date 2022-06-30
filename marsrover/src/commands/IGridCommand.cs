@@ -4,7 +4,7 @@
     // will take action on the plateau in some way
     public interface IGridCommand
     {
-        public string Execute(Grid grid);
+        public string Execute(IPlateau grid);
     }
 }
 

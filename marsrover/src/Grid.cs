@@ -1,20 +1,25 @@
-﻿// A class that defines an x,y coordinate based grid
-// divided into squares.
-using System.Text;
+﻿using System.Text;
 using marsrover.commands;
 
 namespace marsrover
 {
-    public class Grid
+    // A class that defines an x,y coordinate based grid
+    // divided into squares. Implements the IPlateau interface
+    // used by other components to interact with the plateau and rovers on it.
+    public class Grid : IPlateau
     {
-        public Coordinates Corner { get; set; }
+        public Coordinates Bounds { get; set; }
 
-        public IRover? activeRover { get; set; }
+        private IRover? activeRover;
+
         private List<IRover> rovers;
+        public List<IRover> Rovers
+        {
+            get => rovers;
+        }
+
         private IMovementValidator validator;
 
-        // int cornerX: the X-coordinate of the top right square
-        // int cornerY: the Y-coordinate of the top right square
         public Grid()
         {
             activeRover = null;
@@ -25,7 +30,7 @@ namespace marsrover
 
         // Given a string like '1 2 N', update the corresponding Square in the Grid
         // to have a rover on it
-        public void addRover(StartCommand command)
+        public void AddRover(StartCommand command)
         {
             if (this.validator.isSquareOnGrid(command.startCoordinates) && this.validator.isSquareEmpty(command.startCoordinates))
             {
@@ -36,7 +41,7 @@ namespace marsrover
 
         // Process an instruction like "LMLMRM"
         // Return a location and direction like "3 2 S"
-        public string moveRovers()
+        public string MoveRovers()
         {
             // If this is somehow called when we don't have an active rover yet,
             // return early
@@ -56,8 +61,8 @@ namespace marsrover
 
         public bool isSquareOnGrid(Coordinates targetCoordinates)
         {
-            return (targetCoordinates.X >= 0 && targetCoordinates.X <= this.Corner.X) &&
-                   (targetCoordinates.Y >= 0 && targetCoordinates.Y <= this.Corner.Y);
+            return (targetCoordinates.X >= 0 && targetCoordinates.X <= Bounds.X) &&
+                   (targetCoordinates.Y >= 0 && targetCoordinates.Y <= Bounds.Y);
         }
 
         public bool isRoverOnSquare(Coordinates targetCoordinates)
@@ -74,9 +79,19 @@ namespace marsrover
             return false;
         }
 
-        public List<IRover> getRovers()
+        public List<IRover> GetRovers()
         {
             return this.rovers;
+        }
+
+        public void SetRoverCommands(RoverCommand[] commands)
+        {
+            if (this.activeRover == null)
+            {
+                throw new InvalidOperationException("Rover location not set");
+            }
+
+            this.activeRover.Commands = commands;
         }
     }
 

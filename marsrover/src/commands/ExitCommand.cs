@@ -2,7 +2,7 @@
 {
     public class ExitCommand : IGridCommand
     {
-        public string Execute(Grid grid)
+        public string Execute(IPlateau grid)
         {
             Environment.Exit(0);
             return "Goodbye";

@@ -3,6 +3,8 @@ using marsrover.commands;
 
 namespace marsrover
 {
+    // Implementation of a Rover, which can update its position based on
+    // commands passed in.
     public class Rover : IRover
     {
         private CompassDirection currentDirection;

@@ -1,5 +1,6 @@
 ﻿namespace marsrover
 {
+    // Used to convert from input strings to types
     public static class Converters
     {
         public static CompassDirection LetterToCompassDirection(string direction) => direction.ToLower() switch
