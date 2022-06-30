@@ -11,8 +11,8 @@
 
         public bool isSquareOnGrid(Coordinates square)
         {
-            return (square.X >= 0 && square.X <= this.grid.getBounds().X) &&
-                       (square.Y >= 0 && square.Y <= this.grid.getBounds().Y);
+            return (square.X >= 0 && square.X <= this.grid.Corner.X) &&
+                       (square.Y >= 0 && square.Y <= this.grid.Corner.Y);
         }
 
         public bool isSquareEmpty(Coordinates square)

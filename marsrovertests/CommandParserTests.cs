@@ -7,20 +7,20 @@ namespace marsrovertests
         public void assertInputStringToCommand()
         {
             string testInput = "Q";
-            Command command = CommandParser.ParseInput(testInput);
-            Assert.That(command.type, Is.EqualTo(CommandTypes.Exit));
+            IGridCommand command = CommandParser.ParseInput(testInput);
+            Assert.That(command.GetType(), Is.EqualTo(typeof(ExitCommand)));
 
             testInput = "6 4";
             command = CommandParser.ParseInput(testInput);
-            Assert.That(command.type, Is.EqualTo(CommandTypes.SetGridSize));
+            Assert.That(command.GetType(), Is.EqualTo(typeof(GridSizeCommand)));
 
             testInput = "3 3 S";
             command = CommandParser.ParseInput(testInput);
-            Assert.That(command.type, Is.EqualTo(CommandTypes.SetLocation));
+            Assert.That(command.GetType(), Is.EqualTo(typeof(AddRoverCommand)));
 
             testInput = "LMRLMMMR";
             command = CommandParser.ParseInput(testInput);
-            Assert.That(command.type, Is.EqualTo(CommandTypes.MoveAndRotate));
+            Assert.That(command.GetType(), Is.EqualTo(typeof(InstructRoverCommand)));
         }
 
         [Test]
@@ -36,17 +36,6 @@ namespace marsrovertests
                 Assert.That(e.Message, Is.EqualTo("Invalid command"));
             }
         }
-
-        [Test]
-        public void assertValidStartCommand()
-        {
-            string input = "1 1 N";
-            StartCommand command  = CommandParser.ParseStartCommand(input);
-            Assert.That(command.startCoordinates.X, Is.EqualTo(1));
-            Assert.That(command.startCoordinates.Y, Is.EqualTo(1));
-            Assert.That(command.startDirection, Is.EqualTo(CompassDirection.North));
-        }
-
 
 
         [Test]

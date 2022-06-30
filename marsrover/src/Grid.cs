@@ -6,20 +6,21 @@ namespace marsrover
 {
     public class Grid
     {
-        private Coordinates neCorner;
+        public Coordinates Corner { get; set; }
+
         public IRover? activeRover { get; set; }
         private List<IRover> rovers;
         private IMovementValidator validator;
 
         // int cornerX: the X-coordinate of the top right square
         // int cornerY: the Y-coordinate of the top right square
-        public Grid(int cornerX, int cornerY)
+        public Grid()
         {
-            neCorner = new Coordinates(cornerX, cornerY);
             activeRover = null;
             rovers = new List<IRover>();
             validator = new MovementValidator(this);
         }
+
 
         // Given a string like '1 2 N', update the corresponding Square in the Grid
         // to have a rover on it
@@ -54,8 +55,8 @@ namespace marsrover
 
         public bool isSquareOnGrid(Coordinates targetCoordinates)
         {
-            return (targetCoordinates.X >= 0 && targetCoordinates.X <= this.neCorner.X) &&
-                   (targetCoordinates.Y >= 0 && targetCoordinates.Y <= this.neCorner.Y);
+            return (targetCoordinates.X >= 0 && targetCoordinates.X <= this.Corner.X) &&
+                   (targetCoordinates.Y >= 0 && targetCoordinates.Y <= this.Corner.Y);
         }
 
         public bool isRoverOnSquare(Coordinates targetCoordinates)
@@ -70,12 +71,6 @@ namespace marsrover
             }
 
             return false;
-        }
-
-
-        public Coordinates getBounds()
-        {
-            return this.neCorner;
         }
 
         public List<IRover> getRovers()

@@ -12,7 +12,8 @@ public class GridTests
     [Test]
     public void assertStartingLocation()
     {
-        Grid testGrid = new Grid(5, 5);
+        Grid testGrid = new Grid();
+        testGrid.Corner = new Coordinates { X = 5, Y = 5};
         StartCommand start = new StartCommand
         {
             startCoordinates = { X = 0, Y = 0 },
@@ -28,7 +29,8 @@ public class GridTests
     [Test]
     public void assertProcessInstructionValid()
     {
-        Grid testGrid = new Grid(5, 5);
+        Grid testGrid = new Grid();
+        testGrid.Corner = new Coordinates { X = 5, Y = 5 };
         StartCommand start = new StartCommand
         {
             startCoordinates = { X = 1, Y = 2 },
@@ -80,7 +82,8 @@ public class GridTests
     [Test]
     public void assertRoverGridEdge()
     {
-        Grid testGrid = new Grid(8, 8);
+        Grid testGrid = new Grid();
+        testGrid.Corner = new Coordinates { X = 8, Y = 8 };
         StartCommand start = new StartCommand
         {
             startCoordinates = { X = 7, Y = 7 },
@@ -121,7 +124,8 @@ public class GridTests
     [Test]
     public void assertRoversCantCollide()
     {
-        Grid testGrid = new Grid(5, 5);
+        Grid testGrid = new Grid();
+        testGrid.Corner = new Coordinates { X = 5, Y = 5 };
         StartCommand start = new StartCommand
         {
             startCoordinates = { X = 0, Y = 0 },

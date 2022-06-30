@@ -4,38 +4,46 @@
     public static class CommandParser
     {
         const int GRID_SIZE_ARGS = 2;
-        const int MAX_STARTING_LOCATION_INPUT = 5;
+        const int START_ARGS = 3;
 
-        public static Command ParseInput(string inputCommand)
+        public static IGridCommand ParseInput(string inputCommand)
         {
             inputCommand = inputCommand.Trim().ToLower();
             Command command = new Command();
             command.commandInput = inputCommand;
+            IGridCommand? gridCommand = null;
+
             if (inputCommand == "q")
             {
                 command.type = CommandTypes.Exit;
+                gridCommand = new ExitCommand();
             }
             else if (inputCommand == "r")
             {
                 command.type = CommandTypes.Run;
+                gridCommand = new MoveRoversCommand();
             }
             else if (isValidGridSizeCommand(inputCommand)) {
                 command.type = CommandTypes.SetGridSize;
+                gridCommand = new GridSizeCommand(ParseGridSizeCommand(inputCommand));
             }
             else if (isValidLocationCommand(inputCommand))
             {
                 command.type = CommandTypes.SetLocation;
+                gridCommand = new AddRoverCommand(ParseStartCommand(inputCommand));
+                
             }
             else if (isValidMovementCommand(inputCommand))
             {
                 command.type = CommandTypes.MoveAndRotate;
+                gridCommand = new InstructRoverCommand(ParseRoverCommand(inputCommand));
             }
             else
             {
                 throw new ArgumentException("Invalid command");
             }
 
-            return command;
+            return gridCommand;
         }
 
         public static RoverCommand[] ParseRoverCommand(string input)
@@ -61,7 +69,7 @@
 
         }
 
-        public static StartCommand ParseStartCommand(string input)
+        private static StartCommand ParseStartCommand(string input)
         {
             input = input.Trim().ToLower();
             string[] parts = input.Split(' ');
@@ -97,14 +105,13 @@
                 return false;
             }
 
-            int x;
-            if (!Int32.TryParse(parts[0], out x))
+            if (!Int32.TryParse(parts[0], out int x))
             {
                 return false;
             }
 
-            int y;
-            if (!Int32.TryParse(parts[1], out y))
+            
+            if (!Int32.TryParse(parts[1], out int y))
             {
                 return false;
             }
@@ -114,28 +121,25 @@
 
         private static bool isValidLocationCommand(string input)
         {
-            if (input.Length != MAX_STARTING_LOCATION_INPUT)
+            string[] parts = input.Split(' ');
+
+            if (parts.Length != 3)
             {
                 return false;
             }
 
-            if (!Char.IsNumber(input[0]))
+            if (!Int32.TryParse(parts[0], out int x))
             {
                 return false;
             }
 
-            if (input[1] != ' ')
+            if (!Int32.TryParse(parts[1], out int y))
             {
                 return false;
             }
 
-            if (!Char.IsNumber(input[2]))
-            {
-                return false;
-            }
-
-            char[] validDirections = { 'n', 'e', 's', 'w' };
-            if (Array.IndexOf(validDirections, input[4]) == -1)
+            string[] validDirections = { "n", "e", "s", "w" };
+            if (Array.IndexOf(validDirections, parts[2]) == -1)
             {
                 return false;
             }
