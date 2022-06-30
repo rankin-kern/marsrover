@@ -14,4 +14,6 @@ Input is entered into the program using the command line, pressing enter after e
 The challenge instructions don't specifically describe how to handle instructions that would either cause a rover to move off the plateau or collide with another rover. The assumption made in this implementation is that if a move instruction (move forward one space in the current direction) would collide with another rover or go beyond the edge of the plateau, the rover should remain in the same location and move on to the next instruction in the input, if there is one. 
 
 ## Final thoughts
-For future iteration, if I had more time, I would like to further decouple the UI strings used in the interactive console from the logic (as in the commands that return strings currently). That way the underlying logic could be used for a different UI or input mechanism such as a form, REST APIs, etc. 
+For future iteration, if I had more time, I would like to further decouple the UI strings used in the interactive console from the logic (as in the commands that return strings currently). That way the underlying logic could be used for a different UI or input mechanism such as a form, REST APIs, etc.
+
+For feature enhancements, I think it would be cool to add functionality to tell you if the given rover inputs have explored the entire plateau (or what percentage has been explored so far). A definition of 'explored' would have to be made - does a rover 'see' all squares in the current direction or does it have a maximum range? 
